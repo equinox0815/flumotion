@@ -125,10 +125,10 @@ debug it. The flumotion tools (
 .B flumotion-admin
 , and
 .B flumotion-manager
-) all alow you to turn on debugging output in two different ways.
+) all allow you to turn on debugging output in two different ways.
 
 Firstly, you can use an environment variable, FLU_DEBUG. Secondly, you can
-launch the program with a -d or --debug switch. Either approach allows you to
+launch the program with a \-d or \-\-debug switch. Either approach allows you to
 specify a debug configuration string with the following syntax:
 
 .RS
@@ -142,9 +142,9 @@ larger numbers corresponding to more verbose output (ERROR, WARN, INFO, DEBUG,
 and LOG). At level 4, full debugging information is emitted.
 
 You can also use an abbreviated form where you just supply a single number, thisuses that debug level for all modules. Thus the simplest way to enable full
-debug output for all modules is to use '-d 4' on the command line.
+debug output for all modules is to use '\-d 4' on the command line.
 
-A more complex example would be '-d *:3,admin:4' to set the logging level for
+A more complex example would be '\-d *:3,admin:4' to set the logging level for
 the admin module to DEBUG, and for all other modules to INFO.
 
 .SH EXAMPLES
@@ -152,14 +152,14 @@ the admin module to DEBUG, and for all other modules to INFO.
 Simple example, starting flumotion-manager using TCP, in verbose mode:
 
 .RS
-flumotion-manager -v -T tcp conf/managers/default/planet.xml
+flumotion-manager \-v \-T tcp conf/managers/default/planet.xml
 .RE
 
 A slightly more complex example, using two different configuration files and
 running in the background:
 
 .RS
-flumotion-manager -T tcp -D conf/managers/default/planet.xml conf/managers/mystream.xml
+flumotion-manager \-T tcp \-D conf/managers/default/planet.xml conf/managers/mystream.xml
 
 .SH BUGS
 Hopefully none. If you find any bugs, please report them at
