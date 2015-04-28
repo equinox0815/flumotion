@@ -11,6 +11,7 @@ component_PYTHON = \
 	request.py \
 	requestmodifier.py \
 	rrd.py \
+	s5.py \
 	streamdata.py \
         wizard.glade \
         wizard_gtk.py

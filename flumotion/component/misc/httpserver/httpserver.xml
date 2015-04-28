@@ -77,6 +77,7 @@
         <socket type="flumotion.component.plugs.base.ComponentPlug" />
         <socket type="flumotion.component.plugs.streamdata.StreamDataProviderPlug" />
         <socket type="flumotion.component.plugs.rrd.ComponentRRDPlug" />
+        <socket type="flumotion.component.plugs.s5.ComponentSFivePlug" />
         <socket type="flumotion.component.plugs.requestmodifier.RequestModifierPlug" />
         <socket type="flumotion.component.misc.httpserver.ratecontrol.RateControllerPlug" />
         <socket type="flumotion.component.misc.httpserver.fileprovider.FileProviderPlug" />

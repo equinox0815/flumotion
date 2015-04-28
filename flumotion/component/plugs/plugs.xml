@@ -122,6 +122,30 @@
       </properties>
     </plug>
 
+    <plug socket="flumotion.component.plugs.s5.ComponentSFivePlug"
+          type="component-s5"
+          _description="send statistics to the spreadspace streaming statistic suite">
+      <entry location="flumotion/component/plugs/s5.py"
+             function="ComponentSFivePlug" />
+
+      <properties>
+          <property name="socket" type="string" required="true"
+                    _description="absolute path to the unix domain socket" />
+          <property name="hostname" type="string" required="true"
+                    _description="the name of this host, used as machine name in sfive" />
+          <property name="content-id" type="string" required="true"
+                    _description="content-id as specified by sfive" />
+          <property name="format" type="string" required="true"
+                    _description="format as specified by sfive" />
+          <property name="quality" type="string" required="true"
+                    _description="quality as specified by sfive" />
+          <property name="duration" type="int" required="false"
+                    _description="time (in seconds) between updates; defaults to 5" />
+          <property name="tags" type="string" required="false"
+                    _description="comma-seprated list of tags" />
+      </properties>
+    </plug>
+
    <plug socket="flumotion.component.plugs.base.ComponentPlug"
           type="component-manhole"
           _description="Creates a manhole to a component to which you can log in over telnet or ssh.">
@@ -220,6 +244,16 @@
       <directories>
         <directory name="flumotion/component/plugs">
           <filename location="requestmodifier.py" />
+        </directory>
+      </directories>
+    </bundle>
+    <bundle name="base-plugs-s5">
+      <dependencies>
+        <dependency name="base-plugs" />
+      </dependencies>
+      <directories>
+        <directory name="flumotion/component/plugs">
+          <filename location="s5.py" />
         </directory>
       </directories>
     </bundle>
