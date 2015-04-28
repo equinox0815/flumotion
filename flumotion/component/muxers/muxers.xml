@@ -63,6 +63,28 @@
       </wizard>
     </component>
 
+    <component type="mkv-muxer" base="flumotion/component/muxers"
+               _description="Muxes encoded feeds into an matroska feed.">
+      <source location="flumotion.component.muxers.mkv"/>
+      <feeder name="default"/>
+      <eater name="default" multiple="yes"/>
+      <entries>
+        <entry type="component" location="mkv.py"
+               function="MKV"/>
+      </entries>
+    </component>
+
+    <component type="flv-muxer" base="flumotion/component/muxers"
+               _description="Muxes encoded feeds into an flv feed.">
+      <source location="flumotion.component.muxers.flv"/>
+      <feeder name="default"/>
+      <eater name="default" multiple="yes"/>
+      <entries>
+        <entry type="component" location="flv.py"
+               function="FLV"/>
+      </entries>
+    </component>
+
   </components>
 
   <bundles>
@@ -85,6 +107,8 @@
                 <filename location="multipart.py" />
                 <filename location="ogg.py" />
                 <filename location="webm.py" />
+                <filename location="mkv.py" />
+                <filename location="flv.py" />
                 <filename location="checks.py" />
                 <filename location="wizard_gtk.py" />
             </directory>
