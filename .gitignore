@@ -49,6 +49,7 @@ bin/flumotion-job
 bin/flumotion-launch
 bin/flumotion-manager
 bin/flumotion-nagios
+bin/flumotion-checkmk
 bin/flumotion-rrdmon
 bin/flumotion-tester
 bin/flumotion-worker

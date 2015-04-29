@@ -242,6 +242,7 @@ fi
 %{_bindir}/flumotion-launch
 %{_bindir}/flumotion-rrdmon
 %{_bindir}/flumotion-nagios
+%{_bindir}/flumotion-checkmk
 %{_sbindir}/flumotion
 
 %{_libdir}/flumotion
@@ -267,6 +268,9 @@ fi
 %{_sysconfdir}/rc.d/init.d/flumotion
 
 %changelog
+* Wed Apr 29 2015 Christian Pointner <equinox at spreadspace dot org>
+- Add flumotion-checkmk
+
 * Thu Jul 15 2010 Jan Urbanski <jurbanski at flumotion dot com>
 - Add BuildRequires necessary for docs building.
 

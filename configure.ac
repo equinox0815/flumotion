@@ -127,6 +127,7 @@ AC_CONFIG_FILES([bin/flumotion-job], [chmod +x bin/flumotion-job])
 AC_CONFIG_FILES([bin/flumotion-launch], [chmod +x bin/flumotion-launch])
 AC_CONFIG_FILES([bin/flumotion-manager], [chmod +x bin/flumotion-manager])
 AC_CONFIG_FILES([bin/flumotion-nagios], [chmod +x bin/flumotion-nagios])
+AC_CONFIG_FILES([bin/flumotion-checkmk], [chmod +x bin/flumotion-checkmk])
 AC_CONFIG_FILES([bin/flumotion-rrdmon], [chmod +x bin/flumotion-rrdmon])
 AC_CONFIG_FILES([bin/flumotion-tester], [chmod +x bin/flumotion-tester])
 AC_CONFIG_FILES([bin/flumotion-worker], [chmod +x bin/flumotion-worker])
@@ -228,6 +229,7 @@ flumotion/launch/Makefile
 flumotion/manager/Makefile
 flumotion/monitor/Makefile
 flumotion/monitor/nagios/Makefile
+flumotion/monitor/checkmk/Makefile
 flumotion/project/Makefile
 flumotion/service/Makefile
 flumotion/scenario/Makefile

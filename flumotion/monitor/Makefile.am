@@ -8,4 +8,5 @@ clean-local:
 	rm -rf *.pyc *.pyo
 
 SUBDIRS = \
-	nagios
+	nagios \
+	checkmk
