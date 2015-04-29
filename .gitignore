@@ -1,6 +1,8 @@
 # Ignore tarballs
 *.tar.bz2
+*.tar.bz2.md5
 *.tar.gz
+*.tar.gz.md5
 
 # Ignore compiled files
 *pyc
