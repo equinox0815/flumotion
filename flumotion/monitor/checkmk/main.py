@@ -23,15 +23,15 @@ import os
 import sys
 
 from twisted.internet import reactor, defer
-
 from flumotion.common import errors, planet
+from flumotion.configure import configure
 from flumotion.admin import admin
 from flumotion.common.connection import parsePBConnectionInfo
 
 
+
 __version__ = "$Rev$"
 
-FLUMOTION_CONFIG_D='/etc/flumotion'
 CHECK_MK_CONFIG_D='/etc/check_mk'
 
 class CheckMkPlanet():
@@ -144,7 +144,7 @@ def main(args):
         config_file = os.path.join(CHECK_MK_CONFIG_D, 'flumotion.cfg')
         config.read(config_file)
 
-        dir = os.path.join(FLUMOTION_CONFIG_D, 'managers')
+        dir = os.path.join(configure.configdir, 'managers')
         planets = [ p for p in os.listdir(dir) if os.path.isdir(os.path.join(dir,p)) and os.path.isfile(os.path.join(dir,p,'planet.xml')) ]
         for p in planets:
             section = 'planet:%s' %p
