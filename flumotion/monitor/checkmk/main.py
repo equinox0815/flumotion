@@ -76,9 +76,8 @@ class CheckMkPlanet():
 
 
     def _connectedCb(self, result):
-        self._output += 'state = up, connected to manager.\n'
         d = self.planetState(result)
-        d.addCallback(self._doneCB)
+        d.addBoth(self._doneCB)
 
 
     def _connectedEb(self, f):
@@ -114,6 +113,7 @@ class CheckMkPlanet():
 
 
         def gotPlanetStateCb(planet):
+            self._output += 'state = up, connected to manager.\n'
             self._output += 'name = %s\n' % planet.get('name')
             self._output += 'version = %s\n' % planet.get('version')
 
@@ -124,7 +124,11 @@ class CheckMkPlanet():
                 for c in f.get('components'):
                     printComponentMood(planet, f, c)
 
+        def gotPlanetStateEb(ign):
+            self._output += 'state = error, unable to fetch planet state.\n'
+
         d.addCallback(gotPlanetStateCb)
+        d.addErrback(gotPlanetStateEb)
         return d
 
 
@@ -149,11 +153,15 @@ def main(args):
                 for k, v in config.items(section):
                     cfg['planets'][p][k] = v
             else:
-                sys.stdout.write('[planet/%s]\n') % p
-                sys.stdout.write('state = unknown, Please add connection information to %s\n') % config_file
+                sys.stdout.write('[planet/%s]\n' % p)
+                sys.stdout.write('state = unknown, Please add connection information to %s\n' % config_file)
 
     except Exception, e:
         sys.stderr.write('Error while reading config file: %s\n' % e.message)
+        return
+
+    if not cfg['planets']:
+        ## no planets to check
         return
 
     try:
