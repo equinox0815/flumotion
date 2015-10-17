@@ -12,8 +12,8 @@
 # live and recorded data.
 #
 #
-# Copyright (C) 2014 Christian Pointner <equinox@spreadspace.org>
-#                    Markus Grueneis <gimpf@gimpf.org>
+# Copyright (C) 2014-2015 Christian Pointner <equinox@spreadspace.org>
+#                         Markus Grueneis <gimpf@gimpf.org>
 #
 # This file is part of sfive.
 #
@@ -41,7 +41,8 @@ from flumotion.component.plugs import base
 from flumotion.common import messages, i18n, log
 from flumotion.common.poller import Poller
 
-from twisted.internet import protocol, reactor
+from errno import EINTR, EMSGSIZE, EAGAIN, EWOULDBLOCK, ECONNREFUSED, ENOBUFS
+from twisted.internet import protocol, reactor, unix
 from socket import error as socket_error
 import datetime
 import time
@@ -49,11 +50,36 @@ import time
 from flumotion.common.i18n import N_
 T_ = i18n.gettexter()
 
-_DEFAULT_POLL_INTERVAL = 5 # in seconds
+_DEFAULT_POLL_INTERVAL = 15 # in seconds
 _RECONNECT_TIMEOUT = 2 # in seconds
-_MAX_PACKET_SIZE = 8192 # in bytes
+_MAX_PACKET_SIZE = 262144 # in bytes
 
 __version__ = "$Rev$"
+
+class SFivePort(unix.ConnectedDatagramPort):
+
+    def __init__(self, addr, proto, maxPacketSize=8192, mode=0666, bindAddress=None, reactor=None):
+        unix.ConnectedDatagramPort.__init__(self, addr, proto, maxPacketSize, mode, bindAddress, reactor)
+
+    def write(self, data):
+        try:
+            return self.socket.send(data)
+        except socket_error, se:
+            no = se.args[0]
+            if no == EINTR:
+                return self.write(data)
+            elif no == EMSGSIZE:
+                raise error.MessageLengthError, "message too long"
+            elif no == ECONNREFUSED:
+                self.protocol.connectionRefused()
+            elif no == EAGAIN:
+            # the send buffer seems to be full - let's wait a little while...
+            # this is not really a good solution but better than the aproach
+            # of twisted which just drops the datagram...
+                time.sleep(0.01)
+                return self.write(data)
+            else:
+                raise
 
 class SFiveProto(protocol.ConnectedDatagramProtocol):
 
@@ -76,12 +102,6 @@ class SFiveProto(protocol.ConnectedDatagramProtocol):
 
     def sendDatagram(self, data):
         try:
-            ## TODO: twisted will drop messages if the write buffer is full.
-            ##       Some batch importer work around this issue by sleeping
-            ##       and trying again. For live importer the fix is not applicable
-            ##       but also not as common because unlike live sources batch
-            ##       importer produce a lot of data in a very short period of time.
-            ##       Anyway this issue needs to be addressed!
             return self.transport.write(data)
         except socket_error as err:
             self._plug.warning('SFive: sending datagram failed: %s', err)
@@ -142,7 +162,8 @@ class ComponentSFivePlug(base.ComponentPlug):
     def _initSocket(self):
         self.info('SFive: trying to (re)connect to %s...', self._socket)
         self._proto = SFiveProto(self)
-        self._conn = reactor.connectUNIXDatagram(self._socket, self._proto, maxPacketSize=_MAX_PACKET_SIZE)
+        self._conn = SFivePort(self._socket, self._proto, _MAX_PACKET_SIZE, 0666, None, reactor)
+        self._conn.startListening()
 
     def _socketError(self):
         if self._sfivepoller:
@@ -180,6 +201,8 @@ class ComponentSFivePlug(base.ComponentPlug):
         bytes_sent_diff = bytes_sent - self._old_bytes_sent
         self._old_bytes_sent = bytes_sent
 
+        self.debug('SFive: updating %s/%s/%s: %d clients, %d/%d bytes sent/received' %
+                      (self._content_id, self._format, self._quality, client_count, bytes_sent_diff, bytes_received_diff))
         self._sendDatasetFull(self._start_time, self._duration, client_count, bytes_sent_diff, bytes_received_diff)
         self._start_time = datetime.datetime.utcnow().replace(microsecond=0)
 
